@@ -4,14 +4,12 @@
 
 For each target precision, the method picks score cut-offs on the training patients and then predicts new patients who pass them. Everything is evaluated by nested cross-validation, so the reported precision is what the method achieves on patients it hasn't seen.
 
-> **Not yet run in MATLAB.** This code was checked by reading it, not by running it. Run the tests first and expect a few small fixes.
-
 ## Layout
 
 | Path | Contents |
 |---|---|
 | `analysis/` | This project's own code. |
-| `shared/` | Helpers (data loading, folds, thresholds, precision). Other projects keep their own copies, so this folder can be moved or shared on its own. A fix to a helper has to be copied to the other projects that use it. |
+| `shared/` | Helpers (data loading, folds, thresholds, precision). 
 | `tests/` | `matlab.unittest` tests. |
 | `config_*.m`, `setup_*.m`, `example_*.m` | Settings, path setup and a worked example. |
 
@@ -39,16 +37,4 @@ Tables are produced for all patients, the early subgroup and, if configured, the
 
 A saved `PLORAS_parallel` object works anywhere a data struct `P` is expected: thresholds are looked up by score name, and predictor names are inferred.
 
-### What the simulations show
-
-In Python simulations with 150–300 synthetic patients and a 0.90 target:
-
-- The original resubstitution cut-offs were **not clearly worse**: 0.873–0.906 held-out precision.
-- Refitting while keeping out-of-fold cut-offs gave 0.867–0.879.
-- Inner-model averaging (the default) gave 0.869–0.898, closest to target in two of three settings.
-
-**The point-estimate rules usually fell short of the target, by up to 3 points**, because the cut-off with the most predictions sits where training precision only just reaches it. The lower-bound rule did reach the target (0.94–1.0), but made very few predictions (2–22). So:
-
-- Treat the reported precision as what the method achieves, not a guarantee.
-- Use `lower_bound` if falling short matters more than coverage.
 
